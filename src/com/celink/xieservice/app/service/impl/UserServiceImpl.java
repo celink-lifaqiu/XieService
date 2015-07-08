@@ -1,5 +1,7 @@
 package com.celink.xieservice.app.service.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,11 +15,16 @@ import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.celink.xieservice.app.common.Result;
+import com.celink.xieservice.app.constants.Constants;
 import com.celink.xieservice.app.dao.UserDao;
 import com.celink.xieservice.app.pojo.User;
 import com.celink.xieservice.app.service.UserService;
 import com.celink.xieservice.utils.DateUtils;
+import com.celink.xieservice.utils.JsonUtils;
 import com.celink.xieservice.utils.ValidationUtils;
+import com.celink.xieservice.utils.application.ApplicationContextUtil;
+import com.celink.xieservice.utils.file.FileUtil;
+import com.celink.xieservice.utils.image.ImageUtil;
 
 @Component
 public class UserServiceImpl implements UserService {
@@ -29,7 +36,7 @@ public class UserServiceImpl implements UserService {
 		Result result = new Result();
 		if(StringUtils.isBlank(account) || StringUtils.isBlank(password)){
 			result.setCode(100);
-			result.setErr("参数不能为空");
+			result.setErr(Constants.PARAMS_ERR);
 			return result.toJson();
 		}	
     	account = account.trim();
@@ -37,13 +44,13 @@ public class UserServiceImpl implements UserService {
     	
     	if(!ValidationUtils.validateMoblie(account)){
     		result.setCode(101);
-			result.setErr("账号必须是手机号码");
+			result.setErr(Constants.ACCOUNT_ERR);
 			return result.toJson();
     	}
     	
     	if(password.trim().length()<6 || password.trim().length()>16){
     		result.setCode(102);
-			result.setErr("密码长度必须在6到16位之间");
+			result.setErr(Constants.PASSWORD_ERR);
 			return result.toJson();
     	}
     	Map<String, Object> map = new HashMap<String, Object>();
@@ -52,7 +59,7 @@ public class UserServiceImpl implements UserService {
     	int i = 0;
     	if(user!=null){
     		result.setCode(103);
-			result.setErr("账号已存在");
+			result.setErr(Constants.ACCOUNT_EXIST_ERR);
 			return result.toJson();
     	}else{
     		map.put("account", account);
@@ -75,7 +82,7 @@ public class UserServiceImpl implements UserService {
 		Result result = new Result();
 		if(StringUtils.isBlank(account) || StringUtils.isBlank(password)){
 			result.setCode(100);
-			result.setErr("参数不能为空");
+			result.setErr(Constants.PARAMS_ERR);
 			return result.toJson();
 		}
     	
@@ -89,7 +96,7 @@ public class UserServiceImpl implements UserService {
     	User user = userDao.checkLogin(map);
     	if(user == null){
     		result.setCode(104);
-			result.setErr("错误的账号或者密码");
+			result.setErr(Constants.ACCOUNT_OR_PASSWORD_ERR);
 			return result.toJson();
     	}
 		result.setResult(user); //将返回的对象塞到result里面，它会自动被转换成JSON送给客户端
@@ -98,18 +105,51 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String updateUser(String jsonData, byte[] icon) {
+		Result result = new Result();
+		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
 		
+		if(params.get("id")==null){
+			result.setCode(105);
+			result.setErr(Constants.ID_ERR);
+			return result.toJson();
+		}
 		
+		int id = Integer.parseInt(params.get("id").toString());
 		
+		User user = userDao.findUserById(id);
+		if(user==null){
+			result.setCode(106);
+			result.setErr(Constants.ID_NOT_EXIST_ERR);
+			return result.toJson();
+		}
+		try {
+		if(null != icon) {
+			String root = ApplicationContextUtil.getContext().getResource("").getFile().getAbsolutePath();
+			String fileOld = root + File.separator + "icons" + File.separator + user.getIcon();
+			//删除旧文件
+			FileUtil.deleteFile(fileOld);
+			String iconStr = ImageUtil.saveImageBigAndlittle(root+"/icons",".png", icon);
+			params.put("icon", iconStr);
+		}
 		
-		
-		
-		
-		
-		
-		
-		
-		return null;
+		} catch (IOException e) {
+			result.setCode(107);
+			result.setErr(Constants.ICONFILE_ERR);
+			return result.toJson();
+		} catch (Exception e) {
+			result.setCode(500);
+			result.setErr(Constants.SYS_ERR);
+			return result.toJson();
+		}
+		if(userDao.updateUserInfo(params) > 0){
+			user = userDao.findUserById(id);
+		}else{
+			result.setCode(108);
+			result.setErr(Constants.OPERATION_ERR);
+			return result.toJson();
+		}
+		result.setResult(user);
+		return result.toJson();
 	}
 	
 	

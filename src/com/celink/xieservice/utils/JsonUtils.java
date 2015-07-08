@@ -3,6 +3,7 @@ package com.celink.xieservice.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.springframework.util.StringUtils;
 
@@ -80,6 +81,18 @@ public class JsonUtils {
         return map;
     }
 
+    
+    public static Map<String, Object> parseJSON2Map1(String jsonStr) throws JSONException {  
+    	Map<String, Object> map = new HashMap<String, Object>();  
+    	//最外层解析  
+    	JSONObject json = JSONObject.fromObject(jsonStr);  
+    	for(Object k : json.keySet()){  
+    		Object v = json.get(k);   
+    		map.put(k.toString(), v); 
+    	}  
+    	return map;  
+    }  
+    
     public static void main(String[] args) {
         String str = "{\"id\":2,\"catgName\":\"面食\",\"name\":\"少凤飞飞山\",\"num\":1,\"unit\":null,\"price\":23.00,\"remarks\":null},{\"id\":3,\"catgName\":\"面食\",\"name\":\"快餐\",\"num\":1,\"unit\":null,\"price\":2.33,\"remarks\":null},{\"id\":4,\"catgName\":\"面食\",\"name\":\"士大夫\",\"num\":1,\"unit\":null,\"price\":0.22,\"remarks\":null}";
         String aaData = aaData(str);

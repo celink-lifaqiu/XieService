@@ -1,20 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.celink.xieservice.app.dao.UserDao">
-
+	<!-- 根据account查找用户 -->
 	<select id="findUserByAccount" parameterType="String" resultType="user">
 		SELECT * from user_tb where account=#{_parameter}
 	</select>
-
+	<!-- 根据用户id查找用户 -->
+	<select id="findUserById" parameterType="int" resultType="user">
+		SELECT * from user_tb where id=#{_parameter}
+	</select>
+	<!-- 根据account和password查找用户 -->
 	<select id="checkLogin" parameterType="Map" resultType="user">
 		SELECT * from user_tb 
 		where account=#{account}
 		and password=#{password}
 	</select>
-
+	<!-- 增加用户 -->
 	<insert id="saveUser" parameterType="Map">
 		INSERT into user_tb(account, password, registDate) VALUES(#{account},#{password},#{registDate})
 	</insert>
 
+	<!-- 更新用户信息 -->
+	<update id="updateUserInfo" parameterType="Map">
+		update user_tb 
+		<set>
+			<if test="nickName != null and nickName != ''">
+				nickName=#{nickName},
+			</if>
+			<if test="email != null and email != ''">
+				email=#{email},
+			</if>
+			<if test="icon != null and icon != ''">
+				icon=#{icon},
+			</if>
+			<if test="address != null and address != ''">
+				address=#{address},
+			</if>
+			<if test="birthday != null and birthday != ''">
+				birthday=#{birthday},
+			</if>
+			<if test="pwdAnswer != null and pwdAnswer != ''">
+				pwdAnswer=#{pwdAnswer},
+			</if>
 
+			
+			<if test="id != null and id != ''">
+			    id =#{id}
+			</if>
+		</set>
+		where  id=#{id}
+	</update>	
 </mapper>
