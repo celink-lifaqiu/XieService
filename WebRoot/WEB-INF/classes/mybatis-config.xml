@@ -4,6 +4,9 @@
 	<typeAliases>
 		<!-- 用户 -->
 		<typeAlias alias="user" type="com.celink.xieservice.app.pojo.User" />
+		<typeAlias alias="address" type="com.celink.xieservice.app.pojo.Address" />
+		<typeAlias alias="advertise" type="com.celink.xieservice.app.pojo.Advertise" />
+		<typeAlias alias="order" type="com.celink.xieservice.app.pojo.Order" />
 		
 	</typeAliases>
 </configuration>		
