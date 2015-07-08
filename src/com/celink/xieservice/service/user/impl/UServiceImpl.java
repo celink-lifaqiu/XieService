@@ -21,7 +21,20 @@ private final static Logger logger = Logger.getLogger(UServiceImpl.class);
 	}
 
 	@Override
-	public String findAllUser() {
-		return this.userService.findAllUser();
+	public String regist(String account, String password) {
+		
+		return this.userService.regist(account, password);
 	}
+
+	@Override
+	public String login(String account, String password) {
+		return this.userService.login(account, password);
+	}
+
+	@Override
+	public String updateUser(String jsonData, byte[] icon) {
+		return this.userService.updateUser(jsonData, icon);
+	}
+
+	
 }

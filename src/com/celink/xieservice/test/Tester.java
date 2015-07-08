@@ -33,7 +33,7 @@ public class Tester {
 		params.put("email", "celinkli@126.com");
 		params.put("password", "123456");
 		params.put("nickName", "lifaqiu");
-		System.out.println(uservice.findAllUser()+"");
+		System.out.println(uservice.login("13580130321", "123456"));
 	}
 	
 	

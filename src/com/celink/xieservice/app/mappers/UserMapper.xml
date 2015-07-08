@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.celink.xieservice.app.dao.UserDao">
 
-	<select id="findAllUser"  resultType="user">
-	   SELECT * from user_tb
+	<select id="findUserByAccount" parameterType="String" resultType="user">
+		SELECT * from user_tb where account=#{_parameter}
 	</select>
+
+	<select id="checkLogin" parameterType="Map" resultType="user">
+		SELECT * from user_tb 
+		where account=#{account}
+		and password=#{password}
+	</select>
+
+	<insert id="saveUser" parameterType="Map">
+		INSERT into user_tb(account, password, registDate) VALUES(#{account},#{password},#{registDate})
+	</insert>
+
+
 </mapper>

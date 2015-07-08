@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 
+import com.celink.xieservice.utils.DateUtils;
+
 import net.sf.json.JSONObject;
 
 
@@ -86,24 +88,24 @@ public class User implements Serializable {
 		this.address = address;
 	}
 
-	public Date getBirthday() {
-		return birthday;
+	public String getBirthday() {
+		return DateUtils.dateToInputStrWOTime(birthday);
 	}
 
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
 
-	public Date getPwdAnswer() {
-		return pwdAnswer;
+	public String getPwdAnswer() {
+		return DateUtils.dateToInputStrWOTime(pwdAnswer);
 	}
 
 	public void setPwdAnswer(Date pwdAnswer) {
 		this.pwdAnswer = pwdAnswer;
 	}
 
-	public Timestamp getRegistDate() {
-		return registDate;
+	public String getRegistDate() {
+		return DateUtils.dateToInputStrAppendTime(registDate);
 	}
 
 	public void setRegistDate(Timestamp registDate) {
