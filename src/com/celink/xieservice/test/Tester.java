@@ -39,7 +39,7 @@ public class Tester {
 		params.put("email", "celinkli@126.com");
 		params.put("password", "123456");
 		params.put("nickName", "lifaqiu");
-		System.out.println(uservice.login("13580130321", "123456"));
+		System.out.println(uservice.login("13580130321", "qiusss"));
 	}
 	@Test
 	public void updateUserInfo() throws Exception {
@@ -52,13 +52,21 @@ public class Tester {
 		params.put("birthday", "1989-08-15");
 		System.out.println(uservice.updateUser(JSONObject.fromObject(params).toString(), url1));
 	}
+	@Test
+	public void updatePwd() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("account", "13580130321");
+		params.put("pwdAnswer", "1970年01月01日");
+		params.put("newPassword", "qiusss");
+		System.out.println(uservice.updatePwd(JSONObject.fromObject(params).toString()));
+	}
 
   
 	public static void main(String[] args) {
 		try {
 			Tester t = new Tester();
 		    t.before();
-		    t.updateUserInfo();
+		    t.testString();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

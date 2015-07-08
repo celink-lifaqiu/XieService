@@ -42,6 +42,9 @@
 			<if test="pwdAnswer != null and pwdAnswer != ''">
 				pwdAnswer=#{pwdAnswer},
 			</if>
+			<if test="pwd != null and pwd != ''">
+				password=#{pwd},
+			</if>
 
 			
 			<if test="id != null and id != ''">

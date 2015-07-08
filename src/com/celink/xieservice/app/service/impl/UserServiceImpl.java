@@ -159,4 +159,52 @@ public class UserServiceImpl implements UserService {
 		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
     	return encoder.encodePassword(password, account);
 	}
+
+	@Override
+	public String updatePwd(String jsonData) {
+		Result result = new Result();
+		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		
+		if(params.get("account")==null){
+			result.setCode(100);
+			result.setErr(Constants.PARAMS_ERR);
+			return result.toJson();
+		}
+		
+		User user = userDao.findUserByAccount(params.get("account").toString());
+		if(user==null){
+			result.setCode(109);
+			result.setErr(Constants.ACCOUNT_NOT_EXIST_ERR);
+			return result.toJson();
+		}
+		if(!params.get("pwdAnswer").toString().equals(user.getPwdAnswer())){
+			result.setCode(110);
+			result.setErr(Constants.ANSWER_ERR);
+			return result.toJson();
+		}
+		
+		String newPassword = params.get("newPassword").toString().trim();
+		
+		if(newPassword.trim().length()<6 || newPassword.trim().length()>16){
+    		result.setCode(102);
+			result.setErr(Constants.PASSWORD_ERR);
+			return result.toJson();
+    	}
+		
+		params.clear();
+		params.put("id", user.getId());
+		params.put("pwd", getMD5Password(newPassword, user.getAccount()));
+		
+		if(userDao.updateUserInfo(params) > 0){
+			params.clear();
+			params.put("state", true);
+			result.setResult(params);
+		}else{
+			result.setCode(108);
+			result.setErr(Constants.OPERATION_ERR);
+			return result.toJson();
+		}
+		
+		return result.toJson();
+	}
 }

@@ -8,4 +8,6 @@ public interface UserService {
 
 	public String updateUser(String jsonData, byte[] icon);
 
+	public String updatePwd(String jsonData);
+
 }

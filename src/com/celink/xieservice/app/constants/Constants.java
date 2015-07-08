@@ -37,7 +37,10 @@ public class Constants {
 	public static String ICONFILE_ERR = "头像传输有误";
 	// 108
 	public static String OPERATION_ERR = "操作失败";
-	
+	// 109
+	public static String ACCOUNT_NOT_EXIST_ERR = "账号不存在";
+	// 110
+	public static String ANSWER_ERR = "密保答案不正确";
 	
 	
 	

@@ -36,5 +36,10 @@ private final static Logger logger = Logger.getLogger(UServiceImpl.class);
 		return this.userService.updateUser(jsonData, icon);
 	}
 
+	@Override
+	public String updatePwd(String jsonData) {
+		return this.userService.updatePwd(jsonData);
+	}
+
 	
 }
