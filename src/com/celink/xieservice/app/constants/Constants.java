@@ -41,6 +41,8 @@ public class Constants {
 	public static String ACCOUNT_NOT_EXIST_ERR = "账号不存在";
 	// 110
 	public static String ANSWER_ERR = "密保答案不正确";
+	// 111
+	public static String SERVER_DECRYPTION_ERR = "服务器解密出错";
 	
 	
 	

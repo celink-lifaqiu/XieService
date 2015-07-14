@@ -16,12 +16,14 @@ import org.junit.Test;
 import com.caucho.hessian.client.HessianProxyFactory;
 
 import com.celink.xieservice.service.user.UService;
+import com.celink.xieservice.utils.des.DES;
 
 
 public class Tester {
 	private  UService uservice ;
 	@Before
 	public void before() throws MalformedURLException{
+		//		String u = "http://115.28.17.190:8080/XieService/hessianservice/uservice";
 		String u = "http://192.168.4.130:8080/XieService/hessianservice/uservice";
 		HessianProxyFactory factory = new HessianProxyFactory();
 		uservice =  (UService) factory.create(UService.class,u);
@@ -34,12 +36,14 @@ public class Tester {
 	 * @throws Exception
 	 */
 	@Test
-	public void testString() throws Exception {
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("email", "celinkli@126.com");
-		params.put("password", "123456");
-		params.put("nickName", "lifaqiu");
-		System.out.println(uservice.login("13580130321", "qiusss"));
+	public void testLogin() throws Exception {
+		
+		System.out.println(uservice.login1("13580130321", "qiusss"));
+		
+		
+		String plaintext = "{\"account\":\"13580130321\", \"password\":\"qiusss\"}";
+		String ciphertext = DES.encryptDES(plaintext, DES.KEY);
+		System.out.println(uservice.login(ciphertext));
 	}
 	@Test
 	public void updateUserInfo() throws Exception {
@@ -66,7 +70,7 @@ public class Tester {
 		try {
 			Tester t = new Tester();
 		    t.before();
-		    t.testString();
+		    t.testLogin();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -38,15 +38,15 @@
 		<aop:advisor advice-ref="defaultTxAdvice" pointcut-ref="allServiceMethod" />         
 	</aop:config>
    
-	<!--数据源配置 外网 
+	<!--数据源配置 外网  
 	  
     <bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">  
         <property name="poolProperties">  
             <bean class="org.apache.tomcat.jdbc.pool.PoolProperties">  
-                <property name="url" value="jdbc:mysql://192.168.4.130/googfit_db?useUnicode=true&amp;characterEncoding=UTF-8"/>  
+                <property name="url" value="jdbc:mysql://115.28.17.190/googfit_db?useUnicode=true&amp;characterEncoding=UTF-8"/>  
                 <property name="driverClassName" value="com.mysql.jdbc.Driver"/>  
                 <property name="username" value="root"/>  
-                <property name="password" value="admin"/>  
+                <property name="password" value="celinklifaqiu"/>  
                 <property name="jmxEnabled" value="true"/>  
                 <property name="testWhileIdle" value="false"/>  
                 <property name="testOnBorrow" value="true"/>  
@@ -66,8 +66,8 @@
             </bean>  
         </property>  
     </bean>  
-     -->
    
+    -->
     
     <!--数据源配置 内网 -->
     

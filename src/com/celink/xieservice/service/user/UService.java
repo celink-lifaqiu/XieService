@@ -1,6 +1,5 @@
 package com.celink.xieservice.service.user;
 
-import java.util.Date;
 
 public interface UService {
 
@@ -10,7 +9,15 @@ public interface UService {
 	 * @param password 用户密码
 	 * @return
 	 */
-	public String regist(String account, String password);
+	public String regist1(String account, String password);
+	
+	/**
+	 * 注册接口
+	 * @param ciphertext 把下面的json加密得到ciphertext
+	 * 比如用户名和密码为：json={"account":"13580130321", "password":"123456"}
+	 * @return
+	 */
+	public String regist(String ciphertext);
 
 	/**
 	 * 登录接口
@@ -18,7 +25,15 @@ public interface UService {
 	 * @param password 用户密码
 	 * @return
 	 */
-	public String login(String account, String password);
+	public String login1(String account, String password);
+	
+	/**
+	 * 登录接口
+	 * @param ciphertext 把下面的json加密得到ciphertext
+	 * 比如用户名和密码为：json={"account":"13580130321", "password":"123456"}
+	 * @return
+	 */
+	public String login(String ciphertext);
 	
 	/**
 	 * 修改用户资料接口
