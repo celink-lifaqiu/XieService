@@ -85,7 +85,8 @@
 	</select>
 	<!-- 增加用户 -->
 	<insert id="saveUser" parameterType="Map">
-		INSERT into user_tb(account, password, registDate) VALUES(#{account},#{password},#{registDate})
+		INSERT into user_tb(account, password, registDate, nickName, icon, email, address) 
+		VALUES(#{account},#{password},#{registDate},#{nickName},#{icon},#{email},#{address})
 	</insert>
 	<insert id="addUserServiceAddress" parameterType="Map">
 		INSERT into address_tb(userId,reservation,phone,districtInformation,addresss,idDefaultServiceAddress) 
@@ -98,6 +99,11 @@
 		,isUseVoucher,sumPrice,updateTime)
 		VALUES(#{userId},#{orderName},#{packageServiceId},#{price},#{serviceAddressId},
 		#{serviceTime},#{additionalRequirements},#{isUseVoucher},#{sumPrice},#{updateTime})
+	</insert>
+	
+	<insert id="submitComment" parameterType="Map">
+		INSERT into comment_tb(userId,orderId,star,content)
+		VALUES(#{userId},#{orderId},#{star},#{content})
 	</insert>
 
 	<!-- 更新用户信息 -->

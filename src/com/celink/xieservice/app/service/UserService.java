@@ -34,4 +34,6 @@ public interface UserService {
 
 	public String getServicePackageDescById(int id);
 
+	public String submitComment(String jsonData);
+
 }

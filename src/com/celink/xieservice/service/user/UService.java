@@ -99,6 +99,19 @@ public interface UService {
 	public String addOrder(String jsonData);
 	
 	/**
+	 * 提交评论
+	 * @param jsonData
+	 * {
+	 * userId int 用户编号
+	 * orderId int 订单编号
+	 * star int 星级
+	 * content String 评论内容
+	 * }
+	 * @return
+	 */
+	public String submitComment(String jsonData);
+	
+	/**
 	 * 获取总评论接口，返回该类型的平均星级和总定单数
 	 * @param type 
 	 * type=1-->日常保洁

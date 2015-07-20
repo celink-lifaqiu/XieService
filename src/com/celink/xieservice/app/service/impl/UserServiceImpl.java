@@ -65,6 +65,10 @@ public class UserServiceImpl implements UserService {
     		map.put("account", account);
     		map.put("password", getMD5Password(password, account));
     		map.put("registDate", DateUtils.getDateTimestamp());
+    		map.put("nickName", "");
+    		map.put("icon", "");
+    		map.put("email", "");
+    		map.put("address", "");
     		i = userDao.saveUser(map);
     	}
     	map.clear();
@@ -239,6 +243,9 @@ public class UserServiceImpl implements UserService {
 	public String addOrder(String jsonData) {
 		Result result = new Result();
 		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		params.put("additionalRequirements", params.get("additionalRequirements")==null?"":params.get("additionalRequirements").toString());
+		params.put("serviceTime", params.get("serviceTime")==null?"":params.get("serviceTime").toString());
+		params.put("orderName", params.get("orderName")==null?"":params.get("orderName").toString());
 		params.put("updateTime", DateUtils.getDate());
 		boolean state = false;
 		if(this.userDao.addOrder(params) > 0){
@@ -283,6 +290,12 @@ public class UserServiceImpl implements UserService {
 	public String addUserServiceAddress(String jsonData) {
 		Result result = new Result();
 		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		
+		params.put("reservation", params.get("reservation")==null?"":params.get("reservation").toString());
+		params.put("phone", params.get("phone")==null?"":params.get("phone").toString());
+		params.put("districtInformation", params.get("districtInformation")==null?"":params.get("districtInformation").toString());
+		params.put("addresss", params.get("addresss")==null?"":params.get("addresss").toString());
+		
 		int idDefaultServiceAddress = Integer.parseInt(params.get("idDefaultServiceAddress").toString());
 		if(idDefaultServiceAddress==1){
 			this.userDao.updateAddress(Integer.parseInt(params.get("userId").toString()));
@@ -371,6 +384,27 @@ public class UserServiceImpl implements UserService {
 	public String getServicePackageDescById(int id) {
 		Result result = new Result();
 		Map<String, Object> params = this.userDao.getServicePackageDescById(id);
+		result.setResult(params);
+		return result.toJson();
+	}
+
+	@Override
+	public String submitComment(String jsonData) {
+		Result result = new Result();
+		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		
+		params.put("content", params.get("content")==null?"":params.get("content").toString());
+		params.put("userId", params.get("userId")==null?0:Integer.parseInt(params.get("userId").toString()));
+		params.put("orderId", params.get("orderId")==null?0:Integer.parseInt(params.get("orderId").toString()));
+		params.put("star", params.get("star")==null?0:Integer.parseInt(params.get("star").toString()));
+		
+		
+		boolean state = false;
+		if(this.userDao.submitComment(params) > 0){
+			state = true;
+		}
+		params.clear();
+		params.put("state", state);
 		result.setResult(params);
 		return result.toJson();
 	}

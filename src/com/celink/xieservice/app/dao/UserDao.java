@@ -47,6 +47,8 @@ public interface UserDao {
 
 	public List<Map<String, Object>> getVersionChange(Map<String, Object> params);
 
+	public int submitComment(Map<String, Object> params);
+
 	
 
 }

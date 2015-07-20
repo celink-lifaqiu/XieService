@@ -139,5 +139,10 @@ public class UServiceImpl implements UService {
 		return this.userService.getServicePackageDescById(id);
 	}
 
+	@Override
+	public String submitComment(String jsonData) {
+		return this.userService.submitComment(jsonData);
+	}
+
 	
 }
