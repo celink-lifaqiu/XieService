@@ -1,6 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.celink.xieservice.app.dao.UserDao">
+	<select id="getVersionChange" parameterType="Map" resultType="Map">
+		SELECT vc.id,vc.content,vc.platform,vc.version_code
+		from version_changes vc
+		WHERE vc.platform=#{platform}
+		AND vc.version_code=#{version_code}
+	</select>
+	<select id="getUserCouponByIsUsed" parameterType="Map" resultType="Map">
+		SELECT uc.id,uc.userId,uc.createDate,uc.isUsed,uc.updateTime,c.couponName
+		from coupon_tb c, usercoupon_tb uc
+		WHERE c.id=uc.couponId
+		AND uc.userId=#{userId}
+		AND uc.isUsed=#{isUsed}
+	</select>
+	<select id="getServicePackageByType" parameterType="int" resultType="Map">
+		SELECT *
+		from package_tb
+		WHERE packageTypeId=#{_parameter}
+	</select>
+	<select id="checkVersion" parameterType="String" resultType="Map">
+		SELECT v.id,v.filename,v.download_url,v.platform,v.version_code
+		from version v
+		WHERE v.platform=#{_parameter}
+	</select>
+	<select id="getServicePackageDescById" parameterType="int" resultType="Map">
+		SELECT *
+		from package_tb
+		WHERE id=#{_parameter}
+	</select>
+	<select id="getUserServiceAddress" parameterType="int" resultType="Map">
+		SELECT * from address_tb where userId=#{_parameter}
+	</select>
+	<select id="getAllCommentsByType" parameterType="int" resultType="Map">
+		SELECT c.id,u.account,c.commentTime,c.content,c.star
+		from order_tb o,comment_tb c,packagetype_tb pt,package_tb p,user_tb u
+		where o.id=c.orderId 
+		AND u.id=c.userId
+		AND o.packageServiceId=p.id
+		AND p.packageTypeId=pt.id
+		AND pt.id=#{_parameter}
+	</select>
+	<select id="getCommentByType" parameterType="Map" resultType="Map">
+		SELECT COUNT(o.id) as orderCnt,SUM(c.star) as sumStar
+		from order_tb o,comment_tb c,packagetype_tb pt,package_tb p
+		where o.id=c.orderId 
+		AND o.packageServiceId=p.id
+		AND p.packageTypeId=pt.id
+		AND o.isComment=#{isComment}
+		AND pt.id=#{typeId}
+	</select>
+	<select id="getUserOrderListByState" parameterType="Map" resultType="Map">
+		SELECT o.id,p.packageServiceName,p.packageServicePrice,o.state,o.isComment,o.sumPrice,o.orderName,o.updateTime,o.createDate
+		from order_tb o,worker_tb w,package_tb p
+		WHERE o.workerId=w.id 
+		AND o.packageServiceId=p.id
+		AND o.userId=#{userId}
+		AND o.state=#{state}
+	</select>
+	<select id="getOrderDescByOrderId" parameterType="int" resultType="Map">
+		SELECT o.id,o.workerId,w.`name` as workerName,w.phone, o.packageServiceId,p.packageServiceName,p.packageServicePrice
+		,p.packageServiceDesc,o.serviceAddressId,o.isUseVoucher,o.state,o.isComment,o.price
+		,o.sumPrice,o.orderName,o.serviceTime,o.additionalRequirements,o.updateTime,o.createDate
+		from order_tb o,worker_tb w,package_tb p
+		WHERE o.workerId=w.id 
+		AND o.packageServiceId=p.id
+		AND o.id=#{_parameter}
+	</select>
+	
+	
 	<!-- 根据account查找用户 -->
 	<select id="findUserByAccount" parameterType="String" resultType="user">
 		SELECT * from user_tb where account=#{_parameter}
@@ -18,6 +86,18 @@
 	<!-- 增加用户 -->
 	<insert id="saveUser" parameterType="Map">
 		INSERT into user_tb(account, password, registDate) VALUES(#{account},#{password},#{registDate})
+	</insert>
+	<insert id="addUserServiceAddress" parameterType="Map">
+		INSERT into address_tb(userId,reservation,phone,districtInformation,addresss,idDefaultServiceAddress) 
+		VALUES(#{userId},#{reservation},#{phone},#{districtInformation},#{addresss},#{idDefaultServiceAddress})
+	</insert>
+	
+	<insert id="addOrder" parameterType="Map">
+		INSERT into order_tb(userId,orderName,packageServiceId,price,
+		serviceAddressId,serviceTime,additionalRequirements
+		,isUseVoucher,sumPrice,updateTime)
+		VALUES(#{userId},#{orderName},#{packageServiceId},#{price},#{serviceAddressId},
+		#{serviceTime},#{additionalRequirements},#{isUseVoucher},#{sumPrice},#{updateTime})
 	</insert>
 
 	<!-- 更新用户信息 -->
@@ -52,5 +132,33 @@
 			</if>
 		</set>
 		where  id=#{id}
+	</update>	
+	<update id="updateUserServiceAddress" parameterType="Map">
+		update address_tb 
+		<set>
+			<if test="reservation != null and reservation != ''">
+				reservation=#{reservation},
+			</if>
+			<if test="phone != null and phone != ''">
+				phone=#{phone},
+			</if>
+			<if test="districtInformation != null and districtInformation != ''">
+				districtInformation=#{districtInformation},
+			</if>
+			<if test="addresss != null and addresss != ''">
+				address=#{address},
+			</if>
+			<if test="idDefaultServiceAddress != null and idDefaultServiceAddress != ''">
+				idDefaultServiceAddress=#{idDefaultServiceAddress},
+			</if>
+			<if test="id != null and id != ''">
+			    id =#{id}
+			</if>
+		</set>
+		where  id=#{id}
+	</update>	
+	<update id="updateAddress" parameterType="int">
+		update address_tb set idDefaultServiceAddress=0
+		where  userId=#{_parameter}
 	</update>	
 </mapper>

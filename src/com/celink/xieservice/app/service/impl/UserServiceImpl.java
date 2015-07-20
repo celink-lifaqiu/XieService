@@ -207,4 +207,171 @@ public class UserServiceImpl implements UserService {
 		
 		return result.toJson();
 	}
+
+	@Override
+	public String getUserOrderListByState(int userId, int state) {
+		Result result = new Result();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", userId);
+		params.put("state", state);
+		List<Map<String, Object>> list = this.userDao.getUserOrderListByState(params);
+		if(list != null && list.size() > 0){
+			for(Map<String, Object> map: list){
+				map.put("updateTime", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("updateTime").toString())));
+				map.put("createDate", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("createDate").toString())));
+			}
+		}
+		result.setResult(list);
+		return result.toJson();
+	}
+
+	@Override
+	public String getOrderDescByOrderId(int orderId) {
+		Result result = new Result();
+		Map<String, Object> map = this.userDao.getOrderDescByOrderId(orderId);
+		map.put("updateTime", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("updateTime").toString())));
+		map.put("createDate", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("createDate").toString())));
+		result.setResult(map);
+		return result.toJson();
+	}
+
+	@Override
+	public String addOrder(String jsonData) {
+		Result result = new Result();
+		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		params.put("updateTime", DateUtils.getDate());
+		boolean state = false;
+		if(this.userDao.addOrder(params) > 0){
+			state = true;
+		}
+		params.clear();
+		params.put("state", state);
+		result.setResult(params);
+		return result.toJson();
+	}
+
+	@Override
+	public String getCommentByType(int type) {
+		Result result = new Result();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("isComment", 1);
+		params.put("typeId", type);
+		params = this.userDao.getCommentByType(params);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		if(params != null){
+			int sumStar = Integer.parseInt(params.get("sumStar").toString());
+			int orderCnt = Integer.parseInt(params.get("orderCnt").toString());
+			returnMap.put("averageStar", sumStar/orderCnt);
+			returnMap.put("orderCnt", Integer.parseInt(params.get("orderCnt").toString()));
+		}else{
+			returnMap.put("averageStar", 0);
+			returnMap.put("orderCnt", 0);
+		}
+		result.setResult(returnMap);
+		return result.toJson();
+	}
+
+	@Override
+	public String getUserServiceAddress(int userId) {
+		Result result = new Result();
+		List<Map<String, Object>> list = this.userDao.getUserServiceAddress(userId);
+		result.setResult(list);
+		return result.toJson();
+	}
+
+	@Override
+	public String addUserServiceAddress(String jsonData) {
+		Result result = new Result();
+		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		int idDefaultServiceAddress = Integer.parseInt(params.get("idDefaultServiceAddress").toString());
+		if(idDefaultServiceAddress==1){
+			this.userDao.updateAddress(Integer.parseInt(params.get("userId").toString()));
+		}
+		boolean state = false;
+		if(this.userDao.addUserServiceAddress(params) > 0){
+			state = true;
+		}
+		params.clear();
+		params.put("state", state);
+		result.setResult(params);
+		return result.toJson();
+	}
+
+	@Override
+	public String getUserCouponByIsUsed(int userId, int isUsed) {
+		Result result = new Result();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", userId);
+		params.put("isUsed", isUsed);
+		List<Map<String, Object>> list = this.userDao.getUserCouponByIsUsed(params);
+		if(list != null && list.size() > 0){
+			for(Map<String, Object> map: list){
+				map.put("updateTime", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("updateTime").toString())));
+				map.put("createDate", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("createDate").toString())));
+			}
+		}
+		result.setResult(list);
+		return result.toJson();
+	}
+
+	@Override
+	public String getServicePackageByType(int type) {
+		Result result = new Result();
+		List<Map<String, Object>> list = this.userDao.getServicePackageByType(type);
+		result.setResult(list);
+		return result.toJson();
+	}
+
+	@Override
+	public String checkVersion(String platform) {
+		Result result = new Result();
+		Map<String, Object> version = this.userDao.checkVersion(platform);
+		if(version != null){
+			List<Map<String, Object>> list = this.userDao.getVersionChange(version);
+			version.put("versionChange", list);
+		}
+		result.setResult(version);
+		return result.toJson();
+	}
+
+	@Override
+	public String getAllCommentsByType(int type) {
+		Result result = new Result();
+		List<Map<String, Object>> list = this.userDao.getAllCommentsByType(type);
+		if(list != null && list.size() > 0){
+			for(Map<String, Object> map: list){
+				map.put("commentTime", DateUtils.dateToInputStrAppendTime(DateUtils.inputStrAppendTimeToDate(map.get("commentTime").toString())));
+			}
+		}
+		result.setResult(list);
+		return result.toJson();
+	}
+
+	@Override
+	public String updateUserServiceAddress(String jsonData) {
+		Result result = new Result();
+		Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
+		if(params.get("idDefaultServiceAddress") != null){
+			int idDefaultServiceAddress = Integer.parseInt(params.get("idDefaultServiceAddress").toString());
+			if(idDefaultServiceAddress==1){
+				this.userDao.updateAddress(Integer.parseInt(params.get("userId").toString()));
+			}
+		}
+		boolean state = false;
+		if(this.userDao.updateUserServiceAddress(params) > 0){
+			state = true;
+		}
+		params.clear();
+		params.put("state", state);
+		result.setResult(params);
+		return result.toJson();
+	}
+
+	@Override
+	public String getServicePackageDescById(int id) {
+		Result result = new Result();
+		Map<String, Object> params = this.userDao.getServicePackageDescById(id);
+		result.setResult(params);
+		return result.toJson();
+	}
 }

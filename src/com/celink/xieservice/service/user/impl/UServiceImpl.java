@@ -49,56 +49,47 @@ public class UServiceImpl implements UService {
 
 	@Override
 	public String getUserOrderListByState(int userId, int state) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.getUserOrderListByState(userId, state);
 	}
 
 	@Override
 	public String getOrderDescByOrderId(int orderId) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.getOrderDescByOrderId(orderId);
 	}
 
 	@Override
 	public String addOrder(String jsonData) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.addOrder(jsonData);
 	}
 
 	@Override
-	public String getOrderComments(int userId, int orderId) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getCommentByType(int type) {
+		return this.userService.getCommentByType(type);
 	}
 
 	@Override
 	public String getUserServiceAddress(int userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.getUserServiceAddress(userId);
 	}
 
 	@Override
 	public String addUserServiceAddress(String jsonData) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.addUserServiceAddress(jsonData);
 	}
 
 	@Override
 	public String getUserCouponByIsUsed(int userId, int isUsed) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.getUserCouponByIsUsed(userId, isUsed);
 	}
 
 	@Override
 	public String getServicePackageByType(int type) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.getServicePackageByType(type);
 	}
 
 	@Override
 	public String checkVersion(String platform) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userService.checkVersion(platform);
 	}
 
 	@Override
@@ -131,6 +122,21 @@ public class UServiceImpl implements UService {
 		}
 		
 		return result.toJson();
+	}
+
+	@Override
+	public String getAllCommentsByType(int type) {
+		return this.userService.getAllCommentsByType(type);
+	}
+
+	@Override
+	public String updateUserServiceAddress(String jsonData) {
+		return this.userService.updateUserServiceAddress(jsonData);
+	}
+
+	@Override
+	public String getServicePackageDescById(int id) {
+		return this.userService.getServicePackageDescById(id);
 	}
 
 	

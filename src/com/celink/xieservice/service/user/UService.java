@@ -99,12 +99,26 @@ public interface UService {
 	public String addOrder(String jsonData);
 	
 	/**
-	 * 获取评论列表接口
-	 * @param userId 用户Id
-	 * @param orderId 订单id
+	 * 获取总评论接口，返回该类型的平均星级和总定单数
+	 * @param type 
+	 * type=1-->日常保洁
+	 * type=2-->采耳
+	 * type=3-->狗
+	 * type=4-->猫
 	 * @return
 	 */
-	public String getOrderComments(int userId, int orderId);
+	public String getCommentByType(int type);
+	
+	/**
+	 * 根据type获取评论列表接口，每一订单的用户姓名，评论时间，评论星级，评论内容
+	 * @param type 
+	 * type=1-->日常保洁
+	 * type=2-->采耳
+	 * type=3-->狗
+	 * type=4-->猫
+	 * @return
+	 */
+	public String getAllCommentsByType(int type);
 	
 	/**
 	 * 获取用户的服务地址接口
@@ -117,16 +131,32 @@ public interface UService {
 	 * 增加用户服务地址接口
 	 * @param jsonData
 	 * {
-	 *  userId：int 用户Id
+	 *  userId：int 用户Id 必传
 	 *	reservation:String 预约人
 	 *	phone:String 电话
 	 *	districtInformation:String 小区信息
 	 *	addresss:String 详细地址
-	 *	idDefaultServiceAddress:int  是否默认为服务地址（0、否，1、是）
+	 *	idDefaultServiceAddress:int  是否默认为服务地址（0、否，1、是）注意，所有地址中只能有一个是默认地址，如果设置了这个为默认，则其他已经设置的会自动改为0
 	 * }
 	 * @return
 	 */
 	public String addUserServiceAddress(String jsonData);
+	
+	/**
+	 * 修改用户服务地址接口
+	 * @param jsonData
+	 * {
+	 * 	id:服务地址id 必传
+	 *  userId：int 用户Id 必传
+	 *	reservation:String 预约人
+	 *	phone:String 电话
+	 *	districtInformation:String 小区信息
+	 *	addresss:String 详细地址
+	 *	idDefaultServiceAddress:int  是否默认为服务地址（0、否，1、是）注意，所有地址中只能有一个是默认地址，如果设置了这个为默认，则其他已经设置的会自动改为0
+	 * }
+	 * @return
+	 */
+	public String updateUserServiceAddress(String jsonData);
 	
 	/**
 	 * 获取用户的优惠券接口
@@ -147,6 +177,13 @@ public interface UService {
 	 * @return
 	 */
 	public String getServicePackageByType(int type);
+	
+	/**
+	 * 根据id获取套餐详情
+	 * @param id
+	 * @return
+	 */
+	public String getServicePackageDescById(int id);
 	
 	/**
 	 * 检查APP是否有更新
