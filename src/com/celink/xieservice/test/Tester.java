@@ -24,24 +24,21 @@ public class Tester {
 	@Before
 	public void before() throws MalformedURLException{
 		//		String u = "http://115.28.17.190:8080/XieService/hessianservice/uservice";
-		String u = "http://192.168.4.130:8080/XieService/hessianservice/uservice";
+		String u = "http://115.28.17.190:8080/XieService/hessianservice/uservice";
 		HessianProxyFactory factory = new HessianProxyFactory();
 		uservice =  (UService) factory.create(UService.class,u);
 	}
 	
 
-	/**
-	 * 测试注册接口
-	 * 
-	 * @throws Exception
-	 */
+	@Test
+	public void testRegister() throws Exception {
+		String plaintext = "{\"account\":\"13580130322\", \"password\":\"qiusss\"}";
+		String ciphertext = DES.encryptDES(plaintext, DES.KEY);
+		System.out.println(uservice.regist(ciphertext));
+	}
 	@Test
 	public void testLogin() throws Exception {
-		
-		System.out.println(uservice.login1("13580130321", "qiusss"));
-		
-		
-		String plaintext = "{\"account\":\"13580130321\", \"password\":\"qiusss\"}";
+		String plaintext = "{\"account\":\"13580130321\", \"password\":\"qiussss\"}";
 		String ciphertext = DES.encryptDES(plaintext, DES.KEY);
 		System.out.println(uservice.login(ciphertext));
 	}
@@ -49,9 +46,9 @@ public class Tester {
 	public void updateUserInfo() throws Exception {
 		byte[] url1 = loadImages("http://192.168.4.130:8080/GoogFitService/foodicons/1.png");
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("id", 3);
+		params.put("id", 4);
 		params.put("email", "13580130321@163.com");
-		params.put("nickName", "qiu");
+		params.put("nickName", "qiuaaaaa");
 		params.put("address", "深圳宝安");
 		params.put("birthday", "1989-08-15");
 		System.out.println(uservice.updateUser(JSONObject.fromObject(params).toString(), url1));
@@ -59,13 +56,143 @@ public class Tester {
 	@Test
 	public void updatePwd() throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("account", "13580130321");
+		params.put("id", "3");
 		params.put("pwdAnswer", "1970年01月01日");
-		params.put("newPassword", "qiusss");
+		params.put("newPassword", "qiussss");
 		System.out.println(uservice.updatePwd(JSONObject.fromObject(params).toString()));
 	}
+	
+	/**
+	 * 增加订单
+	 * @param jsonData
+	 * {
+	 * userId：int 用户编号
+	 * orderName:String 服务名称(比如，如果是猫的订单，那这个服务名称就是“猫的服务订单”)
+	 * packageServiceId：int 选择的套餐编号
+	 * price：float 小计费用
+	 * serviceAddressId：int 服务地址编号
+	 * serviceTime:String 服务时间
+	 * additionalRequirements:String  附加要求
+	 * isUseVoucher：int 是否使用抵用卷（0、否，1、是）
+	 * sumPrice：float 总费用
+	 * }
+	 * @return
+	 */
+	@Test
+	public void addOrder() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", 3);
+		params.put("orderName", "日常保洁服务");
+		params.put("packageServiceId", 2);
+		params.put("price", 50.0);
+		params.put("serviceAddressId", 1);
+		params.put("serviceTime", "2015-07-22 10点");
+		params.put("additionalRequirements", "无");
+		params.put("isUseVoucher", 0);
+		params.put("sumPrice", 50.0);
+		System.out.println(uservice.addOrder(JSONObject.fromObject(params).toString()));
+	}
+	
+	
+	/**
+	 * 增加用户服务地址接口
+	 * @param jsonData
+	 * {
+	 *  userId：int 用户Id 必传
+	 *	reservation:String 预约人
+	 *	phone:String 电话
+	 *	districtInformation:String 小区信息
+	 *	address:String 详细地址
+	 *	idDefaultServiceAddress:int  是否默认为服务地址（0、否，1、是）注意，所有地址中只能有一个是默认地址，如果设置了这个为默认，则其他已经设置的会自动改为0
+	 * }
+	 * @return
+	 */
+	@Test
+	public void addUserServiceAddress() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", 3);
+		params.put("reservation", "黎法秋");
+		params.put("phone", "13580130321");
+		params.put("districtInformation", "广州花都");
+		params.put("address", "花都街109号");
+		params.put("idDefaultServiceAddress", 1);
+		System.out.println(uservice.addUserServiceAddress(JSONObject.fromObject(params).toString()));
+	}
+	
+	@Test
+	public void updateUserServiceAddress() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", 1);
+		params.put("userId", 3);
+		params.put("reservation", "黎法秋");
+		params.put("phone", "13580130321");
+		params.put("districtInformation", "广州花都区");
+		params.put("address", "花都街109号");
+		params.put("idDefaultServiceAddress", 1);
+		System.out.println(uservice.updateUserServiceAddress(JSONObject.fromObject(params).toString()));
+	}
+	
+	/**
+	 * 提交评论
+	 * @param jsonData
+	 * {
+	 * userId int 用户编号
+	 * orderId int 订单编号
+	 * star int 星级
+	 * content String 评论内容
+	 * }
+	 * @return
+	 */
+	@Test
+	public void submitComment() throws Exception {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("userId", 3);
+		params.put("orderId", 2);
+		params.put("star", 5);
+		params.put("content", "师傅态度很好，给个赞");
+		System.out.println(uservice.submitComment(JSONObject.fromObject(params).toString()));
+	}
+	@Test
+	public void getUserOrderListByState() throws Exception {
+		System.out.println(uservice.getUserOrderListByState(3,1));
+	}
+	@Test
+	public void getOrderDescByOrderId() throws Exception {
+		System.out.println(uservice.getOrderDescByOrderId(2));
+	}
+	@Test
+	public void getCommentByType() throws Exception {
+		System.out.println(uservice.getCommentByType(1));
+	}
+	@Test
+	public void getAllCommentsByType() throws Exception {
+		System.out.println(uservice.getAllCommentsByType(1));
+	}
+	@Test
+	public void getUserServiceAddress() throws Exception {
+		System.out.println(uservice.getUserServiceAddress(3));
+	}
+	@Test
+	public void getUserCouponByIsUsed() throws Exception {
+		System.out.println(uservice.getUserCouponByIsUsed(3,0));
+	}
+	@Test
+	public void getServicePackageByType() throws Exception {
+		System.out.println(uservice.getServicePackageByType(1));
+	}
+	@Test
+	public void getServicePackageDescById() throws Exception {
+		System.out.println(uservice.getServicePackageDescById(1));
+	}
+	@Test
+	public void checkVersion() throws Exception {
+		System.out.println(uservice.checkVersion("ios"));
+	}
+	@Test
+	public void updateOrder() throws Exception {
+		System.out.println(uservice.updateOrder(3,2));
+	}
 
-  
 	public static void main(String[] args) {
 		try {
 			Tester t = new Tester();

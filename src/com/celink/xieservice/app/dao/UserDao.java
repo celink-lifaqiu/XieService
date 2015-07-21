@@ -49,6 +49,20 @@ public interface UserDao {
 
 	public int submitComment(Map<String, Object> params);
 
+	public List<Map<String, Object>> getAllCoupon();
+
+	public int updateCouponNum(Map<String, Object> params);
+
+	public int addUserCoupon(Map<String, Object> params);
+
+	public int updateOrderState(int orderId);
+	
+	public int updateOrderIsComment(int orderId);
+
+	public Map<String, Object> findUserCouponById(int parseInt);
+
+	public int updateUserCouponIsUsed(int parseInt);
+
 	
 
 }

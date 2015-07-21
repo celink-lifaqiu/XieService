@@ -309,11 +309,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         try {
             result = timeFormatIncludeSeconds.parse(inputStrAppendTime);
         } catch (Exception e) {
-            // if (logger.isWarnEnabled()) {
-            // logger.warn("Failed to parse datetime (date=" +
-            // inputStrAppendTime
-            // + ", pattern=" + "dd/MM/yyyy HH:mm:ss", e);
-            // }
         }
 
         return result;

@@ -1,5 +1,6 @@
 package com.celink.xieservice.app.service;
 
+
 public interface UserService {
 
 	public String regist(String account, String password);
@@ -35,5 +36,7 @@ public interface UserService {
 	public String getServicePackageDescById(int id);
 
 	public String submitComment(String jsonData);
+
+	public String updateOrder(int userId, int orderId);
 
 }

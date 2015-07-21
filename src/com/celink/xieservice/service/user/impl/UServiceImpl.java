@@ -12,6 +12,7 @@ import com.celink.xieservice.app.service.UserService;
 import com.celink.xieservice.service.user.UService;
 import com.celink.xieservice.utils.JsonUtils;
 import com.celink.xieservice.utils.des.DES;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 @Component
 public class UServiceImpl implements UService {
 	private final static Logger logger = Logger.getLogger(UServiceImpl.class);
@@ -101,6 +102,7 @@ public class UServiceImpl implements UService {
 			Map<String, Object> params = JsonUtils.parseJSON2Map1(jsonData);
 			return this.userService.regist(params.get("account").toString(), params.get("password").toString());
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			result.setCode(111);
 			result.setErr(Constants.SERVER_DECRYPTION_ERR);
 		}
@@ -142,6 +144,11 @@ public class UServiceImpl implements UService {
 	@Override
 	public String submitComment(String jsonData) {
 		return this.userService.submitComment(jsonData);
+	}
+
+	@Override
+	public String updateOrder(int userId, int orderId) {
+		return this.userService.updateOrder(userId, orderId);
 	}
 
 	

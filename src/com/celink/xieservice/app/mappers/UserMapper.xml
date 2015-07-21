@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.celink.xieservice.app.dao.UserDao">
+	<select id="getAllCoupon" resultType="Map">
+		SELECT * from coupon_tb
+	</select>
 	<select id="getVersionChange" parameterType="Map" resultType="Map">
 		SELECT vc.id,vc.content,vc.platform,vc.version_code
 		from version_changes vc
@@ -20,7 +23,7 @@
 		WHERE packageTypeId=#{_parameter}
 	</select>
 	<select id="checkVersion" parameterType="String" resultType="Map">
-		SELECT v.id,v.filename,v.download_url,v.platform,v.version_code
+		SELECT v.id,v.filename as fileName,v.download_url as downLoadUrl,v.platform,v.version_code as versionCode
 		from version v
 		WHERE v.platform=#{_parameter}
 	</select>
@@ -52,18 +55,18 @@
 	</select>
 	<select id="getUserOrderListByState" parameterType="Map" resultType="Map">
 		SELECT o.id,p.packageServiceName,p.packageServicePrice,o.state,o.isComment,o.sumPrice,o.orderName,o.updateTime,o.createDate
-		from order_tb o,worker_tb w,package_tb p
-		WHERE o.workerId=w.id 
-		AND o.packageServiceId=p.id
+		from order_tb o,package_tb p
+		WHERE o.packageServiceId=p.id
 		AND o.userId=#{userId}
 		AND o.state=#{state}
 	</select>
 	<select id="getOrderDescByOrderId" parameterType="int" resultType="Map">
-		SELECT o.id,o.workerId,w.`name` as workerName,w.phone, o.packageServiceId,p.packageServiceName,p.packageServicePrice
-		,p.packageServiceDesc,o.serviceAddressId,o.isUseVoucher,o.state,o.isComment,o.price
+		SELECT o.id,o.userId,o.workerId,w.`name` as workerName,w.phone as workerPhoneNumber, o.packageServiceId,p.packageServiceName,p.packageServicePrice
+		,p.packageServiceDesc,o.serviceAddressId,a.reservation,a.phone as reservationPhoneNumber,a.districtInformation,a.address,o.isUseVoucher,o.state,o.isComment,o.price
 		,o.sumPrice,o.orderName,o.serviceTime,o.additionalRequirements,o.updateTime,o.createDate
-		from order_tb o,worker_tb w,package_tb p
-		WHERE o.workerId=w.id 
+		from order_tb as o
+		LEFT JOIN worker_tb w ON o.workerId=w.id ,package_tb p,address_tb a
+		WHERE o.serviceAddressId=a.id
 		AND o.packageServiceId=p.id
 		AND o.id=#{_parameter}
 	</select>
@@ -77,6 +80,9 @@
 	<select id="findUserById" parameterType="int" resultType="user">
 		SELECT * from user_tb where id=#{_parameter}
 	</select>
+	<select id="findUserCouponById" parameterType="int" resultType="Map">
+		SELECT * from usercoupon_tb where id=#{_parameter}
+	</select>
 	<!-- 根据account和password查找用户 -->
 	<select id="checkLogin" parameterType="Map" resultType="user">
 		SELECT * from user_tb 
@@ -89,21 +95,26 @@
 		VALUES(#{account},#{password},#{registDate},#{nickName},#{icon},#{email},#{address})
 	</insert>
 	<insert id="addUserServiceAddress" parameterType="Map">
-		INSERT into address_tb(userId,reservation,phone,districtInformation,addresss,idDefaultServiceAddress) 
-		VALUES(#{userId},#{reservation},#{phone},#{districtInformation},#{addresss},#{idDefaultServiceAddress})
+		INSERT into address_tb(userId,reservation,phone,districtInformation,address,idDefaultServiceAddress) 
+		VALUES(#{userId},#{reservation},#{phone},#{districtInformation},#{address},#{idDefaultServiceAddress})
 	</insert>
 	
 	<insert id="addOrder" parameterType="Map">
 		INSERT into order_tb(userId,orderName,packageServiceId,price,
 		serviceAddressId,serviceTime,additionalRequirements
-		,isUseVoucher,sumPrice,updateTime)
+		,isUseVoucher,sumPrice,updateTime,createDate,userCouponId)
 		VALUES(#{userId},#{orderName},#{packageServiceId},#{price},#{serviceAddressId},
-		#{serviceTime},#{additionalRequirements},#{isUseVoucher},#{sumPrice},#{updateTime})
+		#{serviceTime},#{additionalRequirements},#{isUseVoucher},#{sumPrice},#{updateTime},#{createDate},#{userCouponId})
 	</insert>
 	
 	<insert id="submitComment" parameterType="Map">
-		INSERT into comment_tb(userId,orderId,star,content)
-		VALUES(#{userId},#{orderId},#{star},#{content})
+		INSERT into comment_tb(userId,orderId,star,content,commentTime)
+		VALUES(#{userId},#{orderId},#{star},#{content},#{commentTime})
+	</insert>
+	
+	<insert id="addUserCoupon" parameterType="Map">
+		INSERT into coupon_tb(userId,couponId,isUsed,updateTime,createDate)
+		VALUES(#{userId},#{couponId},#{isUsed},#{updateTime},#{createDate})
 	</insert>
 
 	<!-- 更新用户信息 -->
@@ -157,14 +168,28 @@
 			<if test="idDefaultServiceAddress != null and idDefaultServiceAddress != ''">
 				idDefaultServiceAddress=#{idDefaultServiceAddress},
 			</if>
-			<if test="id != null and id != ''">
-			    id =#{id}
-			</if>
+			id =#{id}
 		</set>
 		where  id=#{id}
 	</update>	
 	<update id="updateAddress" parameterType="int">
 		update address_tb set idDefaultServiceAddress=0
 		where  userId=#{_parameter}
+	</update>	
+	<update id="updateUserCouponIsUsed" parameterType="int">
+		update usercoupon_tb set isUsed=1
+		where  id=#{_parameter}
+	</update>	
+	<update id="updateOrderState" parameterType="int">
+		update order_tb set state=3
+		where id=#{_parameter}
+	</update>	
+	<update id="updateOrderIsComment" parameterType="int">
+		update order_tb set isComment=1
+		where id=#{_parameter}
+	</update>	
+	<update id="updateCouponNum" parameterType="Map">
+		update coupon_tb set couponNum=#{couponNum}
+		where  id=#{id}
 	</update>	
 </mapper>

@@ -43,6 +43,20 @@ public class Constants {
 	public static String ANSWER_ERR = "密保答案不正确";
 	// 111
 	public static String SERVER_DECRYPTION_ERR = "服务器解密出错";
+	// 112
+	public static String ORDER_NOT_EXIST_ERR = "订单不存在";
+	// 113
+	public static String USER_ORDER_ERR = "您无权评论此订单";
+	// 114
+	public static String USER_STATE_ERR = "订单未完成，不能评论";
+	// 115
+	public static String ORDER_COMMENT_ERR = "此订单已经评论过，不能重复评论";
+	// 116
+	public static String COUPON_NOT_EXIST_ERR = "优惠券不存在";
+	// 117
+	public static String COUPON_USED_ERR = "优惠券已经使用过，不能重复使用";
+	// 118
+	public static String USER_COUPON_ERR = "优惠券不是您的，不能使用";
 	
 	
 	

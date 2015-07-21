@@ -55,7 +55,7 @@ public interface UService {
 	 * 修改密码接口
 	 * @param jsonData
 	 * { 
-	 * account：String
+	 * id:int 
 	 * pwdAnswer：String  "1970年01月01日"
 	 * newPassword：String 
 	 * }
@@ -92,11 +92,20 @@ public interface UService {
 	 * serviceTime:String 服务时间
 	 * additionalRequirements:String  附加要求
 	 * isUseVoucher：int 是否使用抵用卷（0、否，1、是）
+	 * userCouponId：int 如果使用了抵用卷，要传这个参数
 	 * sumPrice：float 总费用
 	 * }
 	 * @return
 	 */
 	public String addOrder(String jsonData);
+	
+	/**
+	 * 修改订单为完成状态
+	 * @param userId
+	 * @param orderId
+	 * @return
+	 */
+	public String updateOrder(int userId, int orderId);
 	
 	/**
 	 * 提交评论
@@ -115,7 +124,7 @@ public interface UService {
 	 * 获取总评论接口，返回该类型的平均星级和总定单数
 	 * @param type 
 	 * type=1-->日常保洁
-	 * type=2-->采耳
+	 * type=2-->头部保健舒缓
 	 * type=3-->狗
 	 * type=4-->猫
 	 * @return
@@ -126,7 +135,7 @@ public interface UService {
 	 * 根据type获取评论列表接口，每一订单的用户姓名，评论时间，评论星级，评论内容
 	 * @param type 
 	 * type=1-->日常保洁
-	 * type=2-->采耳
+	 * type=2-->头部保健舒缓
 	 * type=3-->狗
 	 * type=4-->猫
 	 * @return
@@ -183,7 +192,7 @@ public interface UService {
 	 * 获取服务套餐列表接口
 	 * ps:
 	 * type=1-->日常保洁
-	 * type=2-->采耳
+	 * type=2-->头部保健舒缓
 	 * type=3-->狗
 	 * type=4-->猫
 	 * @param type 套餐类型
